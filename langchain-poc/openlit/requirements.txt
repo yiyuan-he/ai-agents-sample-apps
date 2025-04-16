@@ -1,0 +1,10 @@
+langchain
+langchain-community
+langchain-openai
+opentelemetry-sdk
+opentelemetry-api
+opentelemetry-semantic-conventions
+openai
+python-dotenv
+aws-opentelemetry-distro
+openlit==1.30.1
