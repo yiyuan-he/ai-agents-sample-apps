@@ -2,9 +2,12 @@ import os
 import uuid
 from primitives.graph import ExecutionGraph 
 from tools.tool_utils import _print_event
-from traces.genesis_tracer import GenesisTracer
 from opentelemetry.instrumentation.langchain import LangchainInstrumentor
 from customer_support_assistant import CustomerSupportAssistant
+from opentelemetry import trace
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
 class Demo:
 
@@ -39,11 +42,16 @@ if __name__ == "__main__":
         # "OK great pick one and book it for my second day there.",
     ]
 
-    # Genesis observability
-    genesis_tracer = GenesisTracer(service_name='flight-assistant-bot')
-    
-    # Platform specific code : Create LangChainInstrumentor for LangChain
-    LangchainInstrumentor().instrument(tracer_provider=genesis_tracer.get_tracer_provider())
+    tracer_provider = TracerProvider()
+
+    otlp_exporter = OTLPSpanExporter(endpoint="http://localhost:4318/v1/traces")
+    otlp_processor = BatchSpanProcessor(otlp_exporter)
+    tracer_provider.add_span_processor(otlp_processor)
+
+    # Set as global provider
+    trace.set_tracer_provider(tracer_provider)
+
+    LangchainInstrumentor().instrument(tracer_provider=tracer_provider)
 
     _printed = set()
     customer_support_agent = Demo().assistant
