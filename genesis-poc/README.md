@@ -45,7 +45,10 @@ $ env OTEL_METRICS_EXPORTER=none \
 After the application is finished running, you can view the generated spans in CloudWatch by following these steps:
 
 1. Open the AWS CloudWatch console
+
 2. Navigate to the "Log groups" section in the left sidebar.
 3. Select the `aws/spans` log group to view your trace data.
+
+<img width="2543" alt="Screenshot 2025-04-17 at 11 36 51 AM" src="https://github.com/user-attachments/assets/4a7b1428-fae8-4366-afc9-078f95ca04d1" />
 
 You can use CloudWatch Logs Insights to query and analyze these spans for monitoring and troubleshooting purposes.
