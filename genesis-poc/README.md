@@ -49,6 +49,6 @@ After the application is finished running, you can view the generated spans in C
 2. Navigate to the "Log groups" section in the left sidebar.
 3. Select the `aws/spans` log group to view your trace data.
 
-<img width="2543" alt="Screenshot 2025-04-17 at 11 36 51 AM" src="https://github.com/user-attachments/assets/4a7b1428-fae8-4366-afc9-078f95ca04d1" />
+<img width="2543" alt="Screenshot 2025-04-17 at 11 47 15 AM" src="https://github.com/user-attachments/assets/b5560a47-4f2f-44a5-8ac7-e91c61ccd3e7" />
 
 You can use CloudWatch Logs Insights to query and analyze these spans for monitoring and troubleshooting purposes.
