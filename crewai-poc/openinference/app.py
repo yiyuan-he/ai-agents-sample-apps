@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from crewai import Agent, Task, Crew, Process
+from crewai import Agent, Task, Crew, Process, LLM
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
@@ -31,8 +31,8 @@ CrewAIInstrumentor().instrument(tracer_provider=tracer_provider)
 
 def main():
     # Initialize the LLM
-    llm = ChatOpenAI(
-        model_name="gpt-3.5-turbo",  # You can change to another model
+    llm = LLM(
+        model="openai/gpt-3.5-turbo",  # You can change to another model
         temperature=0.7,
     )
 

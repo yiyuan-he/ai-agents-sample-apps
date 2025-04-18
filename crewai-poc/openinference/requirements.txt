@@ -7,3 +7,4 @@ python-dotenv
 aws-opentelemetry-distro
 crewai
 openinference-instrumentation-crewai
+botocore
