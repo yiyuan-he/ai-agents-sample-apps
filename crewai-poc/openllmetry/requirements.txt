@@ -1,3 +1,4 @@
+setuptools
 dotenv
 opentelemetry-sdk
 opentelemetry-api
