@@ -1,0 +1,9 @@
+dotenv
+opentelemetry-sdk
+opentelemetry-api
+opentelemetry-semantic-conventions
+openai
+python-dotenv
+crewai
+botocore
+opentelemetry-instrumentation-crewai
