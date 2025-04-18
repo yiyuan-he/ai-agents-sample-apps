@@ -42,3 +42,5 @@ After the application is finished running, you can view the generated spans in C
     1. Open the AWS CloudWatch console
     2. Navigate to the "Logs groups" section in the left sidebar.
     3. Select the `aws/spans` log group to view your trace data.
+    
+![Screenshot 2025-04-18 at 4 36 13 PM](https://github.com/user-attachments/assets/98e98faf-c8bf-415c-9e0c-87baa86216f1)
