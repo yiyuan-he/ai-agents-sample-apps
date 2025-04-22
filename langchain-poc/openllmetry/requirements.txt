@@ -8,3 +8,4 @@ opentelemetry-semantic-conventions
 openai
 python-dotenv
 aws-opentelemetry-distro
+botocore
