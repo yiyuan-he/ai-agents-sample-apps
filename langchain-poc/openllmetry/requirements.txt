@@ -7,6 +7,6 @@ opentelemetry-api
 opentelemetry-semantic-conventions
 openai
 python-dotenv
-aws-opentelemetry-distro
+aws-opentelemetry-distro==0.9.0
 botocore
 boto3
