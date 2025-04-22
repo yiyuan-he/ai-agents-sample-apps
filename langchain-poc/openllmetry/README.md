@@ -24,15 +24,9 @@ pip install -r requirements.txt
 
 Run the application with the ADOT Python SDK:
 ```
-❯ env OTEL_METRICS_EXPORTER=none \
-          OTEL_LOGS_EXPORTER=none \
-          OTEL_PYTHON_DISTRO=aws_distro \
-          OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-          OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-          OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
-          OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
-          OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests" \
-          opentelemetry-instrument python app.py
+export PYTHONPATH="./otel-init:$PYTHONPATH" # bash/zsh
+set -x PYTHONPATH "./otel-init:$PYTHONPATH" # fish
+python app.py
 ```
 **Note**: This sends the spans directly to the X-Ray OTLP endpoint so you don't need to set up an OpenTelemetry Collector.
 
