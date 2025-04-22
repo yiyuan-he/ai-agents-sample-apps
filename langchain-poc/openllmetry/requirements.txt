@@ -9,3 +9,4 @@ openai
 python-dotenv
 aws-opentelemetry-distro
 botocore
+boto3
