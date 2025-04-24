@@ -1,0 +1,11 @@
+opentelemetry/instrumentation/dbapi/__init__.py,sha256=XWWN3Hjj7vHugkcJTf8b2tYNFWnQlt6jrmdHIGvaPcI,18262
+opentelemetry/instrumentation/dbapi/__pycache__/__init__.cpython-312.pyc,,
+opentelemetry/instrumentation/dbapi/__pycache__/package.cpython-312.pyc,,
+opentelemetry/instrumentation/dbapi/__pycache__/version.cpython-312.pyc,,
+opentelemetry/instrumentation/dbapi/package.py,sha256=6OiaAJOKS-XH9e-QAAkj7AyOTw-6bTetTuXhavCCkQ0,609
+opentelemetry/instrumentation/dbapi/version.py,sha256=k-AidjGA623iHn0xeZLE-9ANS0zN_eMtfYxU3popHwY,632
+opentelemetry_instrumentation_dbapi-0.48b0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+opentelemetry_instrumentation_dbapi-0.48b0.dist-info/METADATA,sha256=_oLJA_JUogPPcsfJExVEq-3FyKlSBOwyAlQrqvCUVv8,1862
+opentelemetry_instrumentation_dbapi-0.48b0.dist-info/RECORD,,
+opentelemetry_instrumentation_dbapi-0.48b0.dist-info/WHEEL,sha256=1yFddiXMmvYK7QYTqtRNtX66WJ0Mz8PYEiEUoOUUxRY,87
+opentelemetry_instrumentation_dbapi-0.48b0.dist-info/licenses/LICENSE,sha256=xx0jnfkXJvxRnG63LTGOxlggYnIysveWIZ6H3PNdCrQ,11357

@@ -1,0 +1,16 @@
+opentelemetry/instrumentation/aiopg/__init__.py,sha256=cYySDUITmf98mOG61IzbDiSmOoXKAhVHTujBvxJXqVE,3813
+opentelemetry/instrumentation/aiopg/__pycache__/__init__.cpython-312.pyc,,
+opentelemetry/instrumentation/aiopg/__pycache__/aiopg_integration.cpython-312.pyc,,
+opentelemetry/instrumentation/aiopg/__pycache__/package.cpython-312.pyc,,
+opentelemetry/instrumentation/aiopg/__pycache__/version.cpython-312.pyc,,
+opentelemetry/instrumentation/aiopg/__pycache__/wrappers.cpython-312.pyc,,
+opentelemetry/instrumentation/aiopg/aiopg_integration.py,sha256=UJHYZsjBsRKVED5HDB5sMC000kiN59kO-4yA56sjF0w,6977
+opentelemetry/instrumentation/aiopg/package.py,sha256=OGraZWgxyPDf8s5Y-BpSoKrywu3MqFoLWqRc05ZgrIc,631
+opentelemetry/instrumentation/aiopg/version.py,sha256=wOX_9uGRBIlLks98mTGJZnnmD1Zez4rGVQNmP23fWEc,608
+opentelemetry/instrumentation/aiopg/wrappers.py,sha256=HvF3sEXCAHyY_x-N_ggRN8RtbUPdilthI1i68qcIT50,6852
+opentelemetry_instrumentation_aiopg-0.48b0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+opentelemetry_instrumentation_aiopg-0.48b0.dist-info/METADATA,sha256=0-9sF1nIQkKeCXPnGDft8eqvluaxU7UxvEHN7gJVQPA,1895
+opentelemetry_instrumentation_aiopg-0.48b0.dist-info/RECORD,,
+opentelemetry_instrumentation_aiopg-0.48b0.dist-info/WHEEL,sha256=1yFddiXMmvYK7QYTqtRNtX66WJ0Mz8PYEiEUoOUUxRY,87
+opentelemetry_instrumentation_aiopg-0.48b0.dist-info/entry_points.txt,sha256=ibfH43ba08FnWqx_AR7yHVoHigG8bsPkgBGs4vKMLAg,91
+opentelemetry_instrumentation_aiopg-0.48b0.dist-info/licenses/LICENSE,sha256=xx0jnfkXJvxRnG63LTGOxlggYnIysveWIZ6H3PNdCrQ,11357
