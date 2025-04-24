@@ -33,7 +33,8 @@ $ git clone https://github.com/aws-observability/aws-otel-python-instrumentation
 $ cd aws-otel-python-instrumentation
 ```
 
-Build and install the ADOT Python SDK into a directory called `autoinstrumentation`:
+Build and install the ADOT Python SDK into a directory called `autoinstrumentation` (Optional):
+**Note:** A build of `autoinstrumentation` is already included in the `genesis-poc` directory.
 
 ```
 $ mkdir autoinstrumentation
@@ -56,7 +57,7 @@ $ cd $WORKDIR/ai-agents-sample-apps/genesis-poc
 Set up a python virtual environment and install the sample app's dependencies:
 
 ```
-$ python -m venv
+$ python -m venv venv
 
 $ source venv/bin/activate.fish # fish shell
 $ source venv/bin/activate # bash/zsh shell
