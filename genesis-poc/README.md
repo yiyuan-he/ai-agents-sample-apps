@@ -76,7 +76,7 @@ $ export PYTHONPATH=$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentati
 
 Launch the application with the ADOT Python SDK using the following command:
 ```
-env OTEL_METRICS_EXPORTER=none \
+$ env OTEL_METRICS_EXPORTER=none \
     OTEL_LOGS_EXPORTER=none \
     OTEL_PYTHON_DISTRO=aws_distro \
     OTEL_PYTHON_CONFIGURATOR=aws_configurator \
