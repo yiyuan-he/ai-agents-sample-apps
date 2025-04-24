@@ -67,9 +67,9 @@ $ pip install -r requirements.txt
 Set the `PYTHONPATH` to inject the ADOT SDK's components into the application at runtime:
 
 ```
-$ set -x PYTHONPATH "$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation/opentelemetry/instrument/auto_instrumentation:$PYTHONPATH:$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation" # fish shell
+$ set -x PYTHONPATH "$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation/opentelemetry/instrumentation/auto_instrumentation:$PYTHONPATH:$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation" # fish shell
 
-$ export PYTHONPATH=$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation/opentelemetry/instrument/auto_instrumentation:$PYTHONPATH:$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation" # bash/zsh shell
+$ export PYTHONPATH=$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation/opentelemetry/instrumentation/auto_instrumentation:$PYTHONPATH:$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation" # bash/zsh shell
 ```
 
 ## Running the Application
