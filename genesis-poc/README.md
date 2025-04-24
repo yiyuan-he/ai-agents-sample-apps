@@ -33,8 +33,7 @@ $ git clone https://github.com/aws-observability/aws-otel-python-instrumentation
 $ cd aws-otel-python-instrumentation
 ```
 
-Build and install the ADOT Python SDK into a directory called `autoinstrumentation` (Optional):
-**Note:** A build of `autoinstrumentation` is already included in the `genesis-poc` directory.
+Build and install the ADOT Python SDK into a directory called `autoinstrumentation`:
 
 ```
 $ mkdir autoinstrumentation
