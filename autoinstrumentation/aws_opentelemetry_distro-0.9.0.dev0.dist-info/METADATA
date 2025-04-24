@@ -1,0 +1,95 @@
+Metadata-Version: 2.4
+Name: aws-opentelemetry-distro
+Version: 0.9.0.dev0
+Summary: AWS OpenTelemetry Python Distro
+Project-URL: Homepage, https://github.com/aws-observability/aws-otel-python-instrumentation/tree/main/aws-opentelemetry-distro
+Author: Amazon Web Services
+License-Expression: Apache-2.0
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: Apache Software License
+Classifier: Programming Language :: Python
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Requires-Python: >=3.8
+Requires-Dist: opentelemetry-api==1.27.0
+Requires-Dist: opentelemetry-distro==0.48b0
+Requires-Dist: opentelemetry-exporter-otlp-proto-common==1.27.0
+Requires-Dist: opentelemetry-exporter-otlp-proto-grpc==1.27.0
+Requires-Dist: opentelemetry-exporter-otlp-proto-http==1.27.0
+Requires-Dist: opentelemetry-instrumentation-aio-pika==0.48b0
+Requires-Dist: opentelemetry-instrumentation-aiohttp-client==0.48b0
+Requires-Dist: opentelemetry-instrumentation-aiopg==0.48b0
+Requires-Dist: opentelemetry-instrumentation-asgi==0.48b0
+Requires-Dist: opentelemetry-instrumentation-asyncpg==0.48b0
+Requires-Dist: opentelemetry-instrumentation-aws-lambda==0.48b0
+Requires-Dist: opentelemetry-instrumentation-boto3sqs==0.48b0
+Requires-Dist: opentelemetry-instrumentation-boto==0.48b0
+Requires-Dist: opentelemetry-instrumentation-botocore==0.48b0
+Requires-Dist: opentelemetry-instrumentation-cassandra==0.48b0
+Requires-Dist: opentelemetry-instrumentation-celery==0.48b0
+Requires-Dist: opentelemetry-instrumentation-confluent-kafka==0.48b0
+Requires-Dist: opentelemetry-instrumentation-dbapi==0.48b0
+Requires-Dist: opentelemetry-instrumentation-django==0.48b0
+Requires-Dist: opentelemetry-instrumentation-elasticsearch==0.48b0
+Requires-Dist: opentelemetry-instrumentation-falcon==0.48b0
+Requires-Dist: opentelemetry-instrumentation-fastapi==0.48b0
+Requires-Dist: opentelemetry-instrumentation-flask==0.48b0
+Requires-Dist: opentelemetry-instrumentation-grpc==0.48b0
+Requires-Dist: opentelemetry-instrumentation-httpx==0.48b0
+Requires-Dist: opentelemetry-instrumentation-jinja2==0.48b0
+Requires-Dist: opentelemetry-instrumentation-kafka-python==0.48b0
+Requires-Dist: opentelemetry-instrumentation-logging==0.48b0
+Requires-Dist: opentelemetry-instrumentation-mysql==0.48b0
+Requires-Dist: opentelemetry-instrumentation-mysqlclient==0.48b0
+Requires-Dist: opentelemetry-instrumentation-pika==0.48b0
+Requires-Dist: opentelemetry-instrumentation-psycopg2==0.48b0
+Requires-Dist: opentelemetry-instrumentation-pymemcache==0.48b0
+Requires-Dist: opentelemetry-instrumentation-pymongo==0.48b0
+Requires-Dist: opentelemetry-instrumentation-pymysql==0.48b0
+Requires-Dist: opentelemetry-instrumentation-pyramid==0.48b0
+Requires-Dist: opentelemetry-instrumentation-redis==0.48b0
+Requires-Dist: opentelemetry-instrumentation-remoulade==0.48b0
+Requires-Dist: opentelemetry-instrumentation-requests==0.48b0
+Requires-Dist: opentelemetry-instrumentation-sqlalchemy==0.48b0
+Requires-Dist: opentelemetry-instrumentation-sqlite3==0.48b0
+Requires-Dist: opentelemetry-instrumentation-starlette==0.48b0
+Requires-Dist: opentelemetry-instrumentation-system-metrics==0.48b0
+Requires-Dist: opentelemetry-instrumentation-tornado==0.48b0
+Requires-Dist: opentelemetry-instrumentation-tortoiseorm==0.48b0
+Requires-Dist: opentelemetry-instrumentation-urllib3==0.48b0
+Requires-Dist: opentelemetry-instrumentation-urllib==0.48b0
+Requires-Dist: opentelemetry-instrumentation-wsgi==0.48b0
+Requires-Dist: opentelemetry-instrumentation==0.48b0
+Requires-Dist: opentelemetry-propagator-aws-xray==1.0.1
+Requires-Dist: opentelemetry-propagator-b3==1.27.0
+Requires-Dist: opentelemetry-propagator-jaeger==1.27.0
+Requires-Dist: opentelemetry-propagator-ot-trace==0.48b0
+Requires-Dist: opentelemetry-sdk-extension-aws==2.0.2
+Requires-Dist: opentelemetry-sdk==1.27.0
+Provides-Extra: patch
+Requires-Dist: botocore~=1.0; extra == 'patch'
+Provides-Extra: test
+Description-Content-Type: text/x-rst
+
+AWS Distro For OpenTelemetry Python Distro
+============================================
+
+Installation
+------------
+
+::
+
+    pip install aws-opentelemetry-distro
+
+
+This package provides Amazon Web Services distribution of the OpenTelemetry Python Instrumentation, which allows for auto-instrumentation of Python applications.
+
+References
+----------
+
+* `OpenTelemetry Project <https://opentelemetry.io/>`_
+* `Example using opentelemetry-distro <https://opentelemetry.io/docs/instrumentation/python/distro/>`_

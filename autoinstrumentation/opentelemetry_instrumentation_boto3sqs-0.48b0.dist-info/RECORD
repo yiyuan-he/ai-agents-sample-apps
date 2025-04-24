@@ -1,0 +1,12 @@
+opentelemetry/instrumentation/boto3sqs/__init__.py,sha256=EAo29PmX3qXGKT3HtxUn33EKZniMqGjFV487xZOa2B4,16905
+opentelemetry/instrumentation/boto3sqs/__pycache__/__init__.cpython-312.pyc,,
+opentelemetry/instrumentation/boto3sqs/__pycache__/package.cpython-312.pyc,,
+opentelemetry/instrumentation/boto3sqs/__pycache__/version.cpython-312.pyc,,
+opentelemetry/instrumentation/boto3sqs/package.py,sha256=CouF1H-6kwQCe6qpzfODDLs3kO5cmVnEoiz16xc15co,665
+opentelemetry/instrumentation/boto3sqs/version.py,sha256=wOX_9uGRBIlLks98mTGJZnnmD1Zez4rGVQNmP23fWEc,608
+opentelemetry_instrumentation_boto3sqs-0.48b0.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+opentelemetry_instrumentation_boto3sqs-0.48b0.dist-info/METADATA,sha256=gaIhQKoNZPWs2PXnMRfqGm7SjSF6dZd1p8Jk1KsktR0,1885
+opentelemetry_instrumentation_boto3sqs-0.48b0.dist-info/RECORD,,
+opentelemetry_instrumentation_boto3sqs-0.48b0.dist-info/WHEEL,sha256=1yFddiXMmvYK7QYTqtRNtX66WJ0Mz8PYEiEUoOUUxRY,87
+opentelemetry_instrumentation_boto3sqs-0.48b0.dist-info/entry_points.txt,sha256=COZdGAsBPGarU4ZzuH5M2cf4pB8X-VwdCKLSSXuZ1WU,97
+opentelemetry_instrumentation_boto3sqs-0.48b0.dist-info/licenses/LICENSE,sha256=xx0jnfkXJvxRnG63LTGOxlggYnIysveWIZ6H3PNdCrQ,11357
