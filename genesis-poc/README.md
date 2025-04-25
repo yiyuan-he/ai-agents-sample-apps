@@ -25,28 +25,6 @@ Clone this parent repo:
 $ git clone https://github.com/yiyuan-he/ai-agents-sample-apps.git
 ```
 
-Clone the ADOT Python SDK repo:
-
-```
-$ git clone https://github.com/aws-observability/aws-otel-python-instrumentation.git 
-
-$ cd aws-otel-python-instrumentation
-```
-
-Build and install the ADOT Python SDK into a directory called `autoinstrumentation`:
-
-```
-$ mkdir autoinstrumentation
-
-$ pip install setuptools==75.2.0 urllib3==2.2.3 --target autoinstrumentation ./aws-opentelemetry-distro
-```
-
-Move this `autoinstrumentation` directory to this sample app's directory:
-
-```
-$ mv autoinstrumentation $WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation
-```
-
 `cd` to this sample app:
 
 ```
@@ -72,6 +50,32 @@ $ set -x PYTHONPATH "$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentat
 $ export PYTHONPATH=$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation/opentelemetry/instrumentation/auto_instrumentation:$PYTHONPATH:$WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation" # bash/zsh shell
 ```
 
+### Optional: Custom `autoinstrumentation` ADOT SDK build
+
+Clone the ADOT Python SDK repo:
+
+```
+$ git clone https://github.com/aws-observability/aws-otel-python-instrumentation.git 
+
+$ cd aws-otel-python-instrumentation
+```
+
+Make your desired changes in `./aws-opentelemetry-distro`.
+
+Build and install the ADOT Python SDK into a directory called `autoinstrumentation`:
+
+```
+$ mkdir autoinstrumentation
+
+$ pip install setuptools==75.2.0 urllib3==2.2.3 --target autoinstrumentation ./aws-opentelemetry-distro
+```
+
+Move this `autoinstrumentation` directory to this sample app's directory:
+
+```
+$ mv autoinstrumentation $WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrumentation
+```
+
 ## Running the Application
 
 Launch the application with the ADOT Python SDK using the following command:
@@ -87,6 +91,21 @@ $ env OTEL_METRICS_EXPORTER=none \
     python run_customer_support_console.py
 ```
 **Note:** This sends the spans directly to the X-Ray OTLP endpoint so you don't need to set up the OpenTelemetry Collector or CloudWatch Agent.
+
+Testing custom log group and log stream destination for OTLP X-Ray endpoint:
+```
+$ env OTEL_METRICS_EXPORTER=none \
+    OTEL_LOGS_EXPORTER=none \
+    OTEL_PYTHON_DISTRO=aws_distro \
+    OTEL_PYTHON_CONFIGURATOR=aws_configurator \
+    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
+    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
+    AWS_CLOUDWATCH_LOG_GROUP="my-log-group" \
+    AWS_CLOUDWATCH_LOG_STREAM="my-log-stream" \
+    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
+    OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
+    python run_customer_support_console.py
+```
 
 ## Viewing Spans in CloudWatch
 
