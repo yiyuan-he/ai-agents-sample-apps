@@ -29,8 +29,8 @@ starlette==0.46.1
 typing_extensions==4.12.2
 uvicorn==0.34.0
 langgraph_checkpoint_aws
-opentelemetry-api==1.27.0
-opentelemetry-sdk==1.27.0
+opentelemetry-api
+opentelemetry-sdk
 pytz
 pandas
 opentelemetry-instrumentation-langchain
