@@ -1,5 +1,9 @@
 npm install
+
+
 npm install @aws/aws-distro-opentelemetry-node-autoinstrumentation
+
+
 export NODE_OPTIONS="--require @aws/aws-distro-opentelemetry-node-autoinstrumentation/register" 
 
 
