@@ -1,0 +1,20 @@
+{
+  "name": "auto-instrument_poc",
+  "version": "1.0.0",
+  "description": "AWS Bedrock TypeScript example",
+  "main": "call_bedrock.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node call_bedrock.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.x",
+    "@aws/aws-distro-opentelemetry-node-autoinstrumentation": "^0.6.0",
+    "@opentelemetry/api": "^1.9.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.17.30",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3"
+  }
+}
