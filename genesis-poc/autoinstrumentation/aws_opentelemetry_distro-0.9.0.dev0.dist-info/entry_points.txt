@@ -1,0 +1,5 @@
+[opentelemetry_configurator]
+aws_configurator = amazon.opentelemetry.distro.aws_opentelemetry_configurator:AwsOpenTelemetryConfigurator
+
+[opentelemetry_distro]
+aws_distro = amazon.opentelemetry.distro.aws_opentelemetry_distro:AwsOpenTelemetryDistro

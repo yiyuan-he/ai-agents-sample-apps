@@ -1,0 +1,12 @@
+opentelemetry/instrumentation/tortoiseorm/__init__.py,sha256=hMnpESq98M7DTDU_kk0HGJSv_99rwo6K_ImjohavVq4,11440
+opentelemetry/instrumentation/tortoiseorm/__pycache__/__init__.cpython-312.pyc,,
+opentelemetry/instrumentation/tortoiseorm/__pycache__/package.cpython-312.pyc,,
+opentelemetry/instrumentation/tortoiseorm/__pycache__/version.cpython-312.pyc,,
+opentelemetry/instrumentation/tortoiseorm/package.py,sha256=QgbUgGHiOWT0dGPXhlUf24u4MiEaDomvV4NS_EM9zz0,629
+opentelemetry/instrumentation/tortoiseorm/version.py,sha256=uYW9AHe_CTRZoi-ExYtUTquCExW6ZiH18ELKvuFwO1I,608
+opentelemetry_instrumentation_tortoiseorm-0.53b1.dist-info/INSTALLER,sha256=zuuue4knoyJ-UwPPXg8fezS7VCrXJQrAP7zeNuwvFQg,4
+opentelemetry_instrumentation_tortoiseorm-0.53b1.dist-info/METADATA,sha256=OLXm0q24n5lxumjSy0PMHB_jvRv0UJ-etFq-OP3jt5k,2115
+opentelemetry_instrumentation_tortoiseorm-0.53b1.dist-info/RECORD,,
+opentelemetry_instrumentation_tortoiseorm-0.53b1.dist-info/WHEEL,sha256=qtCwoSJWgHk21S1Kb4ihdzI2rlJ1ZKaIurTj_ngOhyQ,87
+opentelemetry_instrumentation_tortoiseorm-0.53b1.dist-info/entry_points.txt,sha256=4x95g6n4bzos6zAProEc2-pxo8nBUu7ftSTdIFzS_K8,109
+opentelemetry_instrumentation_tortoiseorm-0.53b1.dist-info/licenses/LICENSE,sha256=xx0jnfkXJvxRnG63LTGOxlggYnIysveWIZ6H3PNdCrQ,11357
