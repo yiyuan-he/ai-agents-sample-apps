@@ -1,4 +1,5 @@
 import os
+import asyncio
 from dotenv import load_dotenv
 from langchain_openai import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
@@ -31,6 +32,11 @@ openlit.init()
 # Load environment variables from .env file
 load_dotenv()
 
+async def run_chain(chain, user_input):
+    # Use the asynchronous version to process the input
+    response = await chain.ainvoke({"input": user_input})
+    return response
+
 def main():
     # Initialize the LLM
     llm = ChatOpenAI(
@@ -55,8 +61,8 @@ def main():
         if user_input.lower() == "exit":
             break
 
-        # Process the input through the chain
-        response = chain.invoke({"input": user_input})
+        # Process the input through the chain - run the async function in the event loop
+        response = asyncio.run(run_chain(chain, user_input))
         print(f"\nAI: {response['text']}\n")
 
 if __name__ == "__main__":
