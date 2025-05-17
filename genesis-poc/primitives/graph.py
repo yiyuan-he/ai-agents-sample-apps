@@ -29,7 +29,9 @@ class ExecutionGraph:
 
         # The checkpointer lets the graph persist its state
         # this is a complete memory for the entire graph.
-        session_saver = BedrockSessionSaver()
+        # Configure BedrockSessionSaver with region from environment variable
+        import os
+        session_saver = BedrockSessionSaver(region_name=os.getenv("AWS_REGION", "us-east-1"))
         self.session_id = session_saver.session_client.create_session().session_id
         print("Session ID: ", self.session_id)
         return builder.compile(checkpointer=session_saver)
