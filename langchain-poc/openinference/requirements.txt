@@ -6,6 +6,6 @@ opentelemetry-api
 opentelemetry-semantic-conventions
 openai
 python-dotenv
-aws-opentelemetry-distro
 openinference-instrumentation-langchain
 botocore
+setuptools
