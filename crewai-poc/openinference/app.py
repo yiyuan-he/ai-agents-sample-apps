@@ -57,7 +57,8 @@ def main():
         response_task = Task(
             description=f"The user says: {user_input}. Provide a helpful response.",
             expected_output="A helpful and informative response to the user's query",
-            agent=assistant_agent
+            agent=assistant_agent,
+            context=[]  # Add empty context to avoid the TypeError
         )
 
         # Create a crew with just the assistant agent
@@ -65,6 +66,7 @@ def main():
             agents=[assistant_agent],
             tasks=[response_task],
             verbose=True,
+            share_crew=True,
             process=Process.sequential  # Process tasks sequentially
         )
 
