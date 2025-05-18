@@ -43,7 +43,8 @@ def main():
     chat_task = Task(
         description="Respond to user queries in a helpful and informative way.",
         expected_output="A helpful and informative response to the user's query.",
-        agent=chat_agent
+        agent=chat_agent,
+        context=[]
     )
 
     # Create a crew with just one agent
@@ -51,7 +52,7 @@ def main():
         agents=[chat_agent],
         tasks=[chat_task],
         verbose=True,
-        process=Process.sequential
+        process=Process.sequential,
     )
 
     # Run the chat interface
