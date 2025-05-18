@@ -1,15 +1,12 @@
 import os
 from dotenv import load_dotenv
-from crewai import Agent, Task, Crew, Process, LLM
+from crewai import Agent, Task, Crew, Process
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
 from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
 
 import openlit
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Set up OpenTelemetry with BOTH exporters
 tracer_provider = TracerProvider()
@@ -29,23 +26,36 @@ trace.set_tracer_provider(tracer_provider)
 
 openlit.init()
 
+# Load environment variables from .env file
+load_dotenv()
+
 def main():
-    # Initialize the LLM
-    llm = LLM(
-        model="openai/gpt-3.5-turbo",  # You can change to another model
-        temperature=0.7,
-    )
-
-    # Create an agent (equivalent to LangChain's chain)
-    assistant_agent = Agent(
-        role="Assistant",
-        goal="Provide helpful responses to user queries",
-        backstory="You are a helpful assistant that provides accurate and useful information.",
+    # Initialize the chat agent
+    chat_agent = Agent(
+        role="Helpful Assistant",
+        goal="Assist users by providing helpful and accurate responses",
+        backstory="I'm an AI assistant designed to help users with their queries and provide informative responses.",
         verbose=True,
-        llm=llm,
+        allow_delegation=False
     )
 
-    print("CrewAI Sample App")
+    # Create a task for the agent
+    chat_task = Task(
+        description="Respond to user queries in a helpful and informative way.",
+        expected_output="A helpful and informative response to the user's query.",
+        agent=chat_agent
+    )
+
+    # Create a crew with just one agent
+    crew = Crew(
+        agents=[chat_agent],
+        tasks=[chat_task],
+        verbose=True,
+        process=Process.sequential
+    )
+
+    # Run the chat interface
+    print("CrewAI Chat Sample App")
     print("Type 'exit' to quit\n")
 
     while True:
@@ -53,24 +63,14 @@ def main():
         if user_input.lower() == "exit":
             break
 
-        # Create a task for the agent with the user's input
-        response_task = Task(
-            description=f"The user says: {user_input}. Provide a helpful response.",
-            expected_output="A helpful and informative response to the user's query",
-            agent=assistant_agent
-        )
+        # Update the task with the current user input
+        chat_task.description = f"Respond to the following user query in a helpful and informative way: {user_input}"
+        chat_task.expected_output = "A helpful and informative response to the user's query."
 
-        # Create a crew with just the assistant agent
-        crew = Crew(
-            agents=[assistant_agent],
-            tasks=[response_task],
-            verbose=True,
-            process=Process.sequential  # Process tasks sequentially
-        )
+        # Process the task and get the response
+        response = crew.kickoff()
 
-        # Run the crew to get a response
-        result = crew.kickoff()
-        print(f"\nAI: {result}\n")
+        print(f"\nAI: {response}\n")
 
 if __name__ == "__main__":
     # Check if API key is set
