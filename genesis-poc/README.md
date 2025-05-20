@@ -80,32 +80,23 @@ $ mv autoinstrumentation $WORKDIR/ai-agents-sample-apps/genesis-poc/autoinstrume
 
 Launch the application with the ADOT Python SDK using the following command:
 ```
-$ env OTEL_METRICS_EXPORTER=none \
-    OTEL_LOGS_EXPORTER=none \
-    OTEL_PYTHON_DISTRO=aws_distro \
-    OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
-    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
-    OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
-    python run_customer_support_console.py
+λ  env OTEL_METRICS_EXPORTER=none \
+       OTEL_TRACES_EXPORTER=otlp \
+       OTEL_LOGS_EXPORTER=otlp \
+       OTEL_PYTHON_DISTRO=aws_distro \
+       OTEL_PYTHON_CONFIGURATOR=aws_configurator \
+       OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
+       OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test,x-aws-log-stream=default" \
+       OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
+       OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=https://logs.us-east-1.amazonaws.com/v1/logs \
+       OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
+       OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED="true" \
+       OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="true" \
+       OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
+       AGENT_OBSERVABILITY_ENABLED="true" \
+       python run_customer_support_console.py
 ```
 **Note:** This sends the spans directly to the X-Ray OTLP endpoint so you don't need to set up the OpenTelemetry Collector or CloudWatch Agent.
-
-Testing custom log group and log stream destination for OTLP X-Ray endpoint:
-```
-$ env OTEL_METRICS_EXPORTER=none \
-    OTEL_LOGS_EXPORTER=none \
-    OTEL_PYTHON_DISTRO=aws_distro \
-    OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
-    AWS_CLOUDWATCH_LOG_GROUP="my-log-group" \
-    AWS_CLOUDWATCH_LOG_STREAM="my-log-stream" \
-    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
-    OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
-    python run_customer_support_console.py
-```
 
 ## Viewing Spans in CloudWatch
 

@@ -37,3 +37,4 @@ opentelemetry-instrumentation-langchain
 langchain-openai
 opentelemetry-exporter-otlp
 fastapi
+setuptools
