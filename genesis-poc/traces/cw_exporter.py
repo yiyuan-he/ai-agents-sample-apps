@@ -3,6 +3,7 @@ import boto3
 import json
 import time
 import requests
+import os
 from datetime import datetime
 from types import MappingProxyType
 from botocore.exceptions import ClientError
@@ -11,13 +12,18 @@ from botocore.awsrequest import AWSRequest
 
 class CloudWatchExporter(SpanExporter):
     def __init__(self, log_group_name, log_stream_name):
-        self.client = boto3.client('logs')
+        self.region = os.getenv("AWS_REGION", "us-west-2")
+        self.client = boto3.client(
+            'logs',
+            region_name=self.region,
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        )
         self.log_group_name = log_group_name
         self.log_stream_name = log_stream_name
         self._ensure_log_group_exists()
         self._ensure_log_stream_exists()
         self.sequence_token = None
-        self.region='us-west-2'
     
     def _ensure_log_stream_exists(self):
         try:
@@ -175,8 +181,12 @@ class CloudWatchExporter(SpanExporter):
         return log_events
     
     def export_logs(self, spans):
-        # Get AWS credentials from current session
-        session = boto3.Session()
+        # Get AWS credentials from environment variables
+        session = boto3.Session(
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+            region_name=self.region
+        )
         credentials = session.get_credentials().get_frozen_credentials()
 
         # OTLP endpoint URL
@@ -239,8 +249,12 @@ class CloudWatchExporter(SpanExporter):
             raise e
 
     def export(self, spans):
-        # Get AWS credentials from current session
-        session = boto3.Session()
+        # Get AWS credentials from current session or environment variables
+        session = boto3.Session(
+            aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+            aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+            region_name=self.region
+        )
         credentials = session.get_credentials().get_frozen_credentials()
 
         # OTLP endpoint URL

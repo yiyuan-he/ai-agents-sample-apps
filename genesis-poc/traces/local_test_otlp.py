@@ -2,6 +2,7 @@ import requests
 import json
 import uuid
 import boto3
+import os
 from datetime import datetime
 from botocore.auth import SigV4Auth
 from botocore.awsrequest import AWSRequest
@@ -39,9 +40,16 @@ def ensure_log_group_exists(client, log_group_name):
             print(f"Error creating log group: {str(e)}")
             raise
 
-def send_logs_via_otlp(region='us-west-2'):
-    # Get AWS credentials from current session
-    session = boto3.Session()
+def send_logs_via_otlp(region=None):
+    # Get region from env vars or use default
+    region = region or os.getenv("AWS_REGION", "us-west-2")
+    
+    # Get AWS credentials from environment variables
+    session = boto3.Session(
+        aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
+        aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
+        region_name=region
+    )
     credentials = session.get_credentials().get_frozen_credentials()
 
     # Print current identity for verification
