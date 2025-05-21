@@ -6,7 +6,32 @@ Before you begin, ensure that Transaction Search is enabled on your AWS Account.
 
 https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-Lambda-TransactionSearch.html
 
-Set your AWS credentials:
+Include the following permissions in Genesis application IAM role/user or directly attach CloudWatchAgentServerPolicy policy.
+```
+"Statement" : [
+    {
+      "Sid" : "CWACloudWatchServerPermissions",
+      "Effect" : "Allow",
+      "Action" : [
+        "cloudwatch:PutMetricData",
+        "ec2:DescribeVolumes",
+        "ec2:DescribeTags",
+        "logs:PutLogEvents",
+        "logs:PutRetentionPolicy",
+        "logs:DescribeLogStreams",
+        "logs:DescribeLogGroups",
+        "logs:CreateLogStream",
+        "logs:CreateLogGroup",
+        "xray:PutTraceSegments",
+        "xray:PutTelemetryRecords",
+        "xray:GetSamplingRules",
+        "xray:GetSamplingTargets",
+        "xray:GetSamplingStatisticSummaries"
+      ],
+      "Resource" : "*"
+    }
+```
+Set your AWS credentials with IAM role/user:
 ```
 export AWS_ACCESS_KEY_ID=<AWS_ACCESS_KEY_ID>
 export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
@@ -16,7 +41,7 @@ export AWS_REGION=<AWS_REGION>
 ## Genesis ADOT SDK Enablement
 **Note:** These steps have already been done for you in this directory. You can skip to the "Build and Run the Application" section.
 
-1. Add ADOT SDK to the application's `requirements.txt` file:
+1. Add ADOT SDK as a dependency for observability. Such as the example below, 
 ```
 # requirements.txt
 ...
@@ -24,6 +49,7 @@ rest of dependencies
 ...
 aws-opentelemetry-distro
 ```
+ADOT SDK has been added in requirement.txt [here](https://github.com/yiyuan-he/ai-agents-sample-apps/blob/main/genesis-poc/requirements.txt#L41). 
 
 2. Update your `Dockerfile` with the `opentelemetry-instrument` prefix command:
 ```
@@ -40,12 +66,12 @@ CMD ["opentelemetry-instrument",  "python", "run_customer_support_console.py"] #
 
 Build docker image:
 ```
-λ  docker build -t genesis-poc .
+docker build -t genesis-poc .
 ```
 
 Run application in docker image:
 ```
-λ  docker run \
+docker run \
          -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
          -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
          -e "AWS_REGION=$AWS_REGION" \
