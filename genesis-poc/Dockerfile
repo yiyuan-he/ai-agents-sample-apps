@@ -6,4 +6,6 @@ COPY . .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD ["opentelemetry-instrument", "python", "run_customer_support_console.py"]
+EXPOSE 8000
+
+CMD ["opentelemetry-instrument", "python", "chat_api_server.py"]

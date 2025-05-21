@@ -59,7 +59,7 @@ WORKDIR /app
 
 # ...rest of Dockerfile
 
-CMD ["opentelemetry-instrument",  "python", "run_customer_support_console.py"] # change this line
+CMD ["opentelemetry-instrument",  "python", "chat_api_server.py"] # change this line
 ```
 
 ## Build and Run the Application
@@ -71,26 +71,33 @@ docker build -t genesis-poc .
 
 Run application in docker image:
 ```
-docker run \
-         -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
-         -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
-         -e "AWS_REGION=$AWS_REGION" \
-         -e "OTEL_METRICS_EXPORTER=awsemf" \
-         -e "OTEL_TRACES_EXPORTER=otlp" \
-         -e "OTEL_LOGS_EXPORTER=otlp" \
-         -e "OTEL_PYTHON_DISTRO=aws_distro" \
-         -e "OTEL_PYTHON_CONFIGURATOR=aws_configurator" \
-         -e "OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf" \
-         -e "OTEL_RESOURCE_ATTRIBUTES=service.name=ticketing-agent" \
-         -e "OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true" \
-         -e "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true" \
-         -e "OTEL_AWS_APPLICATION_SIGNALS_ENABLED=false" \
-         -e "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces" \
-         -e "OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=https://logs.us-east-1.amazonaws.com/v1/logs" \
-         -e "OTEL_EXPORTER_OTLP_LOGS_HEADERS=x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
-         -e "OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
-         -e "AGENT_OBSERVABILITY_ENABLED=true" \
-         genesis-poc
+docker run -p 8000:8000 \
+       -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
+       -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
+       -e "AWS_REGION=$AWS_REGION" \
+       -e "OTEL_METRICS_EXPORTER=awsemf" \
+       -e "OTEL_TRACES_EXPORTER=otlp" \
+       -e "OTEL_LOGS_EXPORTER=otlp" \
+       -e "OTEL_PYTHON_DISTRO=aws_distro" \
+       -e "OTEL_PYTHON_CONFIGURATOR=aws_configurator" \
+       -e "OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf" \
+       -e "OTEL_RESOURCE_ATTRIBUTES=service.name=ticketing-agent" \
+       -e "OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true" \
+       -e "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true" \
+       -e "OTEL_AWS_APPLICATION_SIGNALS_ENABLED=false" \
+       -e "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces" \
+       -e "OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=https://logs.us-east-1.amazonaws.com/v1/logs" \
+       -e "OTEL_EXPORTER_OTLP_LOGS_HEADERS=x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
+       -e "OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
+       -e "AGENT_OBSERVABILITY_ENABLED=true" \
+       genesis-poc
+```
+
+From another terminal run:
+```
+λ  curl -X POST http://localhost:8000/chat \
+           -H "Content-Type: application/json" \
+           -d '{"message": "Hi there, what time is my flight?"}'
 ```
 
 **Important:** Make sure the `log-group` and `log-stream` specified already exists in your account since we do utilize `CreateLogGroup` or `CreateLogStream` permissions yet.
