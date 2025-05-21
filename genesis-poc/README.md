@@ -13,7 +13,30 @@ export AWS_SECRET_ACCESS_KEY=<AWS_SECRET_ACCESS_KEY>
 export AWS_REGION=<AWS_REGION>
 ```
 
-## Environment Setup
+## Genesis ADOT SDK Enablement
+**Note:** These steps have already been done for you in this directory. You can skip to the "Build and Run the Application" section.
+
+1. Add ADOT SDK to the application's `requirements.txt` file:
+```
+# requirements.txt
+...
+rest of dependencies
+...
+aws-opentelemetry-distro
+```
+
+2. Update your `Dockerfile` with the `opentelemetry-instrument` prefix command:
+```
+FROM python:3.12-slim
+
+WORKDIR /app
+
+# ...rest of Dockerfile
+
+CMD ["opentelemetry-instrument",  "python", "run_customer_support_console.py"] # change this line
+```
+
+## Build and Run the Application
 
 Build docker image:
 ```
@@ -26,24 +49,25 @@ Run application in docker image:
          -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
          -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
          -e "AWS_REGION=$AWS_REGION" \
-         -e "OTEL_METRICS_EXPORTER=none" \
+         -e "OTEL_METRICS_EXPORTER=awsemf" \
          -e "OTEL_TRACES_EXPORTER=otlp" \
          -e "OTEL_LOGS_EXPORTER=otlp" \
          -e "OTEL_PYTHON_DISTRO=aws_distro" \
          -e "OTEL_PYTHON_CONFIGURATOR=aws_configurator" \
          -e "OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf" \
-         -e "OTEL_RESOURCE_ATTRIBUTES=service.name=customer-support-assistant" \
+         -e "OTEL_RESOURCE_ATTRIBUTES=service.name=ticketing-agent" \
          -e "OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true" \
          -e "OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=true" \
+         -e "OTEL_AWS_APPLICATION_SIGNALS_ENABLED=false" \
          -e "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces" \
          -e "OTEL_EXPORTER_OTLP_LOGS_ENDPOINT=https://logs.us-east-1.amazonaws.com/v1/logs" \
-         -e "OTEL_EXPORTER_OTLP_LOGS_HEADERS=x-aws-log-group=genesis/llo,x-aws-log-stream=default" \
+         -e "OTEL_EXPORTER_OTLP_LOGS_HEADERS=x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
          -e "OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
          -e "AGENT_OBSERVABILITY_ENABLED=true" \
          genesis-poc
 ```
 
-**Note:** This sends the spans directly to the X-Ray OTLP endpoint so you don't need to set up the OpenTelemetry Collector or CloudWatch Agent.
+**Important:** Make sure the `log-group` and `log-stream` specified already exists in your account since we do utilize `CreateLogGroup` or `CreateLogStream` permissions yet.
 
 ## Viewing Spans in CloudWatch
 
@@ -53,6 +77,7 @@ After the application is finished running, you can view the generated spans in C
 
 2. Navigate to the "Log groups" section in the left sidebar.
 3. Select the `aws/spans` log group to view your trace data.
+4. Select the configured log group to view your logs and metrics data i.e. `test/genesis`.
 
 <img width="2543" alt="Screenshot 2025-04-17 at 11 47 15 AM" src="https://github.com/user-attachments/assets/b5560a47-4f2f-44a5-8ac7-e91c61ccd3e7" />
 
