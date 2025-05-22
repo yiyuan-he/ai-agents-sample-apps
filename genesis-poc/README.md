@@ -98,7 +98,10 @@ From another terminal run:
 curl -X POST http://localhost:8000/chat \
        -H "Content-Type: application/json" \
        -d '{"message": "Hi there, what time is my flight?"}'
+```
 
+Asking follow-up question in same thread:
+```
 curl -X POST http://localhost:8000/chat \
               -H "Content-Type: application/json" \
               -d '{"message": "Do I have any other flights booked?", "thread_id": "<your-thread-id-here>"}'
