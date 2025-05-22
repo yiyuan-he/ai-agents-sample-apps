@@ -95,9 +95,9 @@ docker run -p 8000:8000 \
 
 From another terminal run:
 ```
-λ  curl -X POST http://localhost:8000/chat \
-           -H "Content-Type: application/json" \
-           -d '{"message": "Hi there, what time is my flight?"}'
+curl -X POST http://localhost:8000/chat \
+       -H "Content-Type: application/json" \
+       -d '{"message": "Hi there, what time is my flight?"}'
 ```
 
 **Important:** Make sure the `log-group` and `log-stream` specified already exists in your account since we do utilize `CreateLogGroup` or `CreateLogStream` permissions yet.
