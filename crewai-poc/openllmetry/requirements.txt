@@ -8,3 +8,4 @@ python-dotenv
 crewai
 botocore
 opentelemetry-instrumentation-crewai
+boto3
