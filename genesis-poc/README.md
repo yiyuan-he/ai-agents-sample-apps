@@ -72,19 +72,22 @@ docker build -t genesis-poc .
 Run application in docker image:
 ```
 docker run -p 8000:8000 \
-            -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
-            -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
-            -e "AWS_REGION=$AWS_REGION" \
-            -e "OTEL_PYTHON_DISTRO=aws_distro" \
-            -e "OTEL_PYTHON_CONFIGURATOR=aws_configurator" \
-            -e "OTEL_RESOURCE_ATTRIBUTES=service.name=ticketing-agent,aws.log.group.names=test/genesis,aws.log.stream.names=default" \
-            -e "OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true" \
-            -e "OTEL_AWS_APPLICATION_SIGNALS_ENABLED=false" \
-            -e "OTEL_PYTHON_DISABLED_INSTRUMENTATIONS=http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests,starlette" \
-            -e "AGENT_OBSERVABILITY_ENABLED=true" \
-            genesis-poc
+     -e "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" \
+     -e "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" \
+     -e "AWS_REGION=$AWS_REGION" \
+     -e "OTEL_PYTHON_DISTRO=aws_distro" \
+     -e "OTEL_PYTHON_CONFIGURATOR=aws_configurator" \
+     -e "OTEL_RESOURCE_ATTRIBUTES=service.name=ticketing-agent,aws.log.group.names=test/genesis,cloud.resource_id=<agent_arn>" \
+     -e "OTEL_EXPORTER_OTLP_LOGS_HEADERS=x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
+     -e "AGENT_OBSERVABILITY_ENABLED=true" \
+     genesis-poc
 ```
-**Note:** Customer will have to provide their log group and log stream config in the `OTEL_RESOURCE_ATTRIBUTES` env var.
+**Note:** Customer will need to set the following configurations:
+- `OTEL_PYTHON_DISTRO=aws_distro`
+- `OTEL_PYTHON_CONFIGURATOR=aws_configurator`
+- `OTEL_EXPORTER_OTLP_LOGS_HEADERS=x-aws-log-group=<log-group>,x-aws-log-stream=<log-stream>,x-aws-metric-namespace=<metric-namespace>`
+- `OTEL_RESOURCE_ATTRIBUTES=service.name=<service-name>,aws.log.group.names=<log-group>,cloud.resource_id=<agent_arn>`
+- `AGENT_OBSERVABILITY_ENABLED=true`
 
 From another terminal run:
 ```
