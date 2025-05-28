@@ -8,3 +8,4 @@ crewai
 openinference-instrumentation-crewai
 botocore
 setuptools
+boto3
