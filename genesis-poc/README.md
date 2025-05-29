@@ -47,7 +47,7 @@ export AWS_REGION=<AWS_REGION>
 ...
 rest of dependencies
 ...
-aws-opentelemetry-distro
+aws_opentelemetry_distro_genai_beta
 ```
 ADOT SDK has been added in requirement.txt [here](https://github.com/yiyuan-he/ai-agents-sample-apps/blob/main/genesis-poc/requirements.txt#L41). 
 
