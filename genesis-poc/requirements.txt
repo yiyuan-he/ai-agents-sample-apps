@@ -38,4 +38,4 @@ langchain-openai
 opentelemetry-exporter-otlp
 fastapi
 setuptools
-./aws_opentelemetry_distro-0.9.0.dev0-py3-none-any.whl
+aws_opentelemetry_distro_genai_beta
