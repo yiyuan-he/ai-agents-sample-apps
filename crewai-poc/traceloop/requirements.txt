@@ -9,3 +9,5 @@ botocore
 traceloop-sdk
 packaging
 setuptools
+boto3
+./aws_opentelemetry_distro_genai_beta-0.1.0b4-py3-none-any.whl 
