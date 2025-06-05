@@ -6,7 +6,8 @@ opentelemetry-api
 opentelemetry-semantic-conventions
 openai
 python-dotenv
-aws-opentelemetry-distro
 traceloop-sdk
 botocore
 boto3
+setuptools
+./aws_opentelemetry_distro_genai_beta-0.1.0b4-py3-none-any.whl
