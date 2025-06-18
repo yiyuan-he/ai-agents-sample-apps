@@ -8,10 +8,10 @@ https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-Lambda-Tra
 
 ## Environment Setup
 
-Set up a `.env` file with the following contents:
-```
-OPENAI_API_KEY="<your_api_key>"
-```
+This application uses AWS Bedrock instead of OpenAI. Ensure you have AWS credentials configured via one of these methods:
+- Environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`)
+- AWS CLI configuration (`~/.aws/credentials`)
+- IAM instance profile (if running on EC2)
 
 Set your `TRACELOOP_API_KEY` in the your shell environment:
 ```
@@ -27,19 +27,36 @@ pip install -r requirements.txt
 
 ## Running the Application
 
-Run the application with the ADOT Python SDK:
+The application now runs as a FastAPI server. Run it with the ADOT Python SDK:
 ```
-❯ env OTEL_METRICS_EXPORTER=none \
-          OTEL_LOGS_EXPORTER=none \
-          OTEL_PYTHON_DISTRO=aws_distro \
-          OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-          OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-          OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
-          OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
-          OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests" \
-          opentelemetry-instrument python app.py
+env OTEL_PYTHON_DISTRO=aws_distro \
+    OTEL_PYTHON_CONFIGURATOR=aws_configurator \
+    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
+    OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
+    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
+    OTEL_AWS_APPLICATION_SIGNALS_ENABLED="false" \
+    AGENT_OBSERVABILITY_ENABLED="true" \
+    STRANDS_OTEL_ENABLE_CONSOLE_EXPORT="true" \
+    OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED="true" \
+    opentelemetry-instrument python server.py
 ```
-**Note**: This sends the spans directly to the X-Ray OTLP endpoint so you don't need to set up an OpenTelemetry Collector.
+
+The server will start on `http://localhost:8000`
+
+## Testing the API
+
+Once the server is running, you can test it with curl:
+
+```bash
+curl -X POST http://localhost:8000/chat \
+  -H "Content-Type: application/json" \
+  -d '{"message": "Hello, how are you?"}'
+```
+
+Other available endpoints:
+- `GET /` - Root endpoint
+- `GET /health` - Health check
+- `GET /docs` - Interactive API documentation
 
 ## Viewing Spans in CloudWatch
 
