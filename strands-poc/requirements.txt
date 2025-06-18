@@ -2,3 +2,5 @@ strands-agents>=0.1.0
 strands-agents-tools>=0.1.0
 setuptools
 aws-opentelemetry-distro-genai-beta==0.1.0b6
+fastapi
+uvicorn[standard]
