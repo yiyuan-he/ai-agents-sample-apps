@@ -1,7 +1,7 @@
 import os
 import asyncio
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_ollama import ChatOllama
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 from opentelemetry import trace
@@ -38,10 +38,11 @@ async def run_chain(chain, user_input):
     return response
 
 def main():
-    # Initialize the LLM
-    llm = ChatOpenAI(
-        model_name="gpt-3.5-turbo",  # You can change to another model
+    # Initialize the LLM with Ollama
+    llm = ChatOllama(
+        model="llama3.2",  # You can use other models like mistral, phi, etc.
         temperature=0.7,
+        base_url="http://localhost:11434"  # Default Ollama URL
     )
 
     # Create a prompt template
@@ -66,10 +67,10 @@ def main():
         print(f"\nAI: {response['text']}\n")
 
 if __name__ == "__main__":
-    # Check if API key is set
-    if not os.getenv("OPENAI_API_KEY"):
-        print("Error: OPENAI_API_KEY not found in environment variables.")
-        print("Create a .env file with your API key: OPENAI_API_KEY=your-key-here")
-        exit(1)
+    # Check if Ollama is running
+    print("Make sure Ollama is running locally.")
+    print("Install Ollama from: https://ollama.ai")
+    print("Then run: ollama pull llama3.2")
+    print("")
 
     main()

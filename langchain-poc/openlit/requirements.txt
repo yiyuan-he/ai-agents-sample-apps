@@ -1,13 +1,14 @@
 langchain
 langchain-community
-langchain-openai
+langchain-ollama
 opentelemetry-sdk
 opentelemetry-api
 opentelemetry-semantic-conventions
-openai
 python-dotenv
 openlit
 botocore
 setuptools
 boto3
-./aws_opentelemetry_distro_genai_beta-0.1.0b4-py3-none-any.whl 
+aws-opentelemetry-distro-genai-beta==0.1.0b6
+fastapi
+uvicorn[standard]
