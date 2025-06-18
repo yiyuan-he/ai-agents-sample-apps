@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_aws import ChatBedrock
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 from opentelemetry import trace
@@ -31,10 +31,15 @@ Traceloop.init()
 load_dotenv()
 
 def main():
-    # Initialize the LLM
-    llm = ChatOpenAI(
-        model_name="gpt-3.5-turbo",  # You can change to another model
-        temperature=0.7,
+    # Initialize the LLM with AWS Bedrock
+    # Using Claude 3 Haiku for fast responses
+    llm = ChatBedrock(
+        model_id="anthropic.claude-3-haiku-20240307-v1:0",
+        model_kwargs={
+            "temperature": 0.7,
+            "max_tokens": 500
+        },
+        region_name=os.getenv("AWS_DEFAULT_REGION", "us-west-2")
     )
 
     # Create a prompt template
@@ -59,10 +64,13 @@ def main():
         print(f"\nAI: {response['text']}\n")
 
 if __name__ == "__main__":
-    # Check if API key is set
-    if not os.getenv("OPENAI_API_KEY"):
-        print("Error: OPENAI_API_KEY not found in environment variables.")
-        print("Create a .env file with your API key: OPENAI_API_KEY=your-key-here")
-        exit(1)
+    # AWS Bedrock uses AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)
+    # or IAM roles/instance profiles - no API key needed
+    print("Starting LangChain app with AWS Bedrock...")
+    print("Make sure AWS credentials are configured via:")
+    print("  - Environment variables (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY)")
+    print("  - AWS CLI configuration (~/.aws/credentials)")
+    print("  - IAM instance profile (if running on EC2)")
+    print()
 
     main()
