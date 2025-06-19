@@ -1,6 +1,6 @@
 import os
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_aws import ChatBedrock
 from langchain.prompts import ChatPromptTemplate
 from langchain.chains import LLMChain
 from opentelemetry import trace
@@ -31,10 +31,11 @@ LangchainInstrumentor().instrument(tracer_provider=tracer_provider)
 load_dotenv()
 
 def main():
-    # Initialize the LLM
-    llm = ChatOpenAI(
-        model_name="gpt-3.5-turbo",  # You can change to another model
-        temperature=0.7,
+    # Initialize the LLM with AWS Bedrock
+    llm = ChatBedrock(
+        model_id="anthropic.claude-3-haiku-20240307-v1:0",
+        model_kwargs={"temperature": 0.7},
+        region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1")
     )
 
     # Create a prompt template
@@ -59,10 +60,19 @@ def main():
         print(f"\nAI: {response['text']}\n")
 
 if __name__ == "__main__":
-    # Check if API key is set
-    if not os.getenv("OPENAI_API_KEY"):
-        print("Error: OPENAI_API_KEY not found in environment variables.")
-        print("Create a .env file with your API key: OPENAI_API_KEY=your-key-here")
+    # Check if AWS credentials are available
+    try:
+        import boto3
+        # Try to create a bedrock client to verify credentials
+        bedrock = boto3.client('bedrock-runtime', region_name=os.getenv("AWS_DEFAULT_REGION", "us-east-1"))
+        print("AWS credentials configured successfully.")
+    except Exception as e:
+        print("Error: AWS credentials not properly configured.")
+        print("Please configure AWS credentials using:")
+        print("  - AWS CLI: aws configure")
+        print("  - Environment variables: AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY")
+        print("  - IAM role (if running on EC2/Lambda)")
+        print(f"\nError details: {e}")
         exit(1)
 
     main()
