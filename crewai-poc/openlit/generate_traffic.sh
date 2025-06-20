@@ -1,0 +1,216 @@
+#!/bin/bash
+
+# CrewAI OpenLit Traffic Generator
+# This script sends requests to the CrewAI server to generate trace data
+
+# Configuration
+SERVER_URL="${SERVER_URL:-http://localhost:8000}"
+DELAY_SECONDS="${DELAY_SECONDS:-60}"    # Default: 1 minute between requests
+MAX_REQUESTS="${MAX_REQUESTS:-0}"       # 0 = infinite loop
+
+# Color codes for output
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+RED='\033[0;31m'
+NC='\033[0m' # No Color
+
+# Sample queries - Technical support focused
+QUERIES=(
+    "How do I troubleshoot high memory usage in a Python application?"
+    "My application is experiencing intermittent connection timeouts. What are the possible causes?"
+    "How can I debug a memory leak in a Node.js application?"
+    "What are the best practices for logging in microservices?"
+    "How do I optimize database query performance in PostgreSQL?"
+    "My Docker container keeps crashing with exit code 137. What does this mean?"
+    "How can I implement proper error handling in a distributed system?"
+    "What tools can I use to profile CPU usage in a Java application?"
+    "How do I troubleshoot SSL/TLS certificate issues in a web application?"
+    "What are the common causes of 502 Bad Gateway errors and how to fix them?"
+)
+
+# Function to print colored output
+print_status() {
+    echo -e "${BLUE}[$(date '+%Y-%m-%d %H:%M:%S')]${NC} $1"
+}
+
+print_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+print_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
+
+print_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
+
+# Function to check if server is running
+check_server() {
+    print_status "Checking server health..."
+    if curl -s "${SERVER_URL}/health" > /dev/null; then
+        print_success "Server is healthy"
+        return 0
+    else
+        print_error "Server is not responding at ${SERVER_URL}"
+        return 1
+    fi
+}
+
+# Function to send a chat request
+send_chat_request() {
+    local query="$1"
+    print_status "Sending chat request (CrewAI): \"${query}\""
+    
+    response=$(curl -s -X POST "${SERVER_URL}/chat" \
+        -H "Content-Type: application/json" \
+        -d "{\"message\": \"${query}\"}" \
+        -w "\n%{http_code}")
+    
+    http_code=$(echo "$response" | tail -n 1)
+    body=$(echo "$response" | head -n -1)
+    
+    if [ "$http_code" = "200" ]; then
+        print_success "Chat request completed successfully"
+        echo -e "${GREEN}Response preview:${NC} $(echo "$body" | jq -r '.response' | head -c 100)..."
+    else
+        print_error "Chat request failed with HTTP code: $http_code"
+    fi
+}
+
+# Function to send a direct converse request
+send_converse_request() {
+    local query="$1"
+    print_status "Sending direct converse request (Bedrock): \"${query}\""
+    
+    response=$(curl -s -X POST "${SERVER_URL}/converse" \
+        -H "Content-Type: application/json" \
+        -d "{\"message\": \"${query}\"}" \
+        -w "\n%{http_code}")
+    
+    http_code=$(echo "$response" | tail -n 1)
+    body=$(echo "$response" | head -n -1)
+    
+    if [ "$http_code" = "200" ]; then
+        print_success "Converse request completed successfully"
+        echo -e "${GREEN}Response preview:${NC} $(echo "$body" | jq -r '.response' | head -c 100)..."
+    else
+        print_error "Converse request failed with HTTP code: $http_code"
+    fi
+}
+
+# Function to send a batch request
+send_batch_request() {
+    print_status "Sending batch request with 3 queries..."
+    
+    # Select 3 random queries
+    local batch_queries=()
+    for i in {1..3}; do
+        batch_queries+=("${QUERIES[$RANDOM % ${#QUERIES[@]}]}")
+    done
+    
+    # Create JSON array
+    local json_array=$(printf '%s\n' "${batch_queries[@]}" | jq -R . | jq -s .)
+    
+    response=$(curl -s -X POST "${SERVER_URL}/batch" \
+        -H "Content-Type: application/json" \
+        -d "{\"messages\": ${json_array}}" \
+        -w "\n%{http_code}")
+    
+    http_code=$(echo "$response" | tail -n 1)
+    
+    if [ "$http_code" = "200" ]; then
+        print_success "Batch request completed successfully"
+    else
+        print_error "Batch request failed with HTTP code: $http_code"
+    fi
+}
+
+# Function to send a sample request
+send_sample_request() {
+    print_status "Sending sample request..."
+    
+    response=$(curl -s "${SERVER_URL}/sample" -w "\n%{http_code}")
+    http_code=$(echo "$response" | tail -n 1)
+    
+    if [ "$http_code" = "200" ]; then
+        print_success "Sample request completed successfully"
+    else
+        print_error "Sample request failed with HTTP code: $http_code"
+    fi
+}
+
+# Main execution
+main() {
+    echo -e "${BLUE}=== CrewAI OpenLit Traffic Generator ===${NC}"
+    echo "Server URL: ${SERVER_URL}"
+    echo "Delay between requests: ${DELAY_SECONDS} seconds"
+    echo "Max requests: ${MAX_REQUESTS} (0 = infinite)"
+    echo ""
+    
+    # Check if jq is installed
+    if ! command -v jq &> /dev/null; then
+        print_warning "jq is not installed. Install it for better output formatting."
+    fi
+    
+    # Initial server check
+    if ! check_server; then
+        print_error "Please ensure the CrewAI server is running at ${SERVER_URL}"
+        exit 1
+    fi
+    
+    request_count=0
+    
+    # Main loop
+    while true; do
+        request_count=$((request_count + 1))
+        
+        echo ""
+        print_status "Starting request cycle #${request_count}"
+        
+        # Randomly select request type
+        request_type=$((RANDOM % 4))
+        
+        case $request_type in
+            0)
+                # Send chat request with random query
+                query="${QUERIES[$RANDOM % ${#QUERIES[@]}]}"
+                send_chat_request "$query"
+                ;;
+            1)
+                # Send direct converse request
+                query="${QUERIES[$RANDOM % ${#QUERIES[@]}]}"
+                send_converse_request "$query"
+                ;;
+            2)
+                # Send batch request
+                send_batch_request
+                ;;
+            3)
+                # Send sample request
+                send_sample_request
+                ;;
+        esac
+        
+        # Check if we've reached max requests
+        if [ "$MAX_REQUESTS" -gt 0 ] && [ "$request_count" -ge "$MAX_REQUESTS" ]; then
+            print_status "Reached maximum number of requests (${MAX_REQUESTS})"
+            break
+        fi
+        
+        # Wait before next request
+        print_status "Waiting ${DELAY_SECONDS} seconds before next request..."
+        print_status "Press Ctrl+C to stop"
+        sleep "$DELAY_SECONDS"
+    done
+    
+    echo ""
+    print_status "Traffic generation completed. Total requests: ${request_count}"
+}
+
+# Trap Ctrl+C to exit gracefully
+trap 'echo ""; print_warning "Interrupted by user"; exit 0' INT
+
+# Run main function
+main
