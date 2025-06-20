@@ -1,0 +1,12 @@
+llama-index
+llama-index-llms-bedrock-converse
+opentelemetry-instrumentation-llamaindex
+opentelemetry-api
+opentelemetry-sdk
+opentelemetry-exporter-otlp
+fastapi
+uvicorn[standard]
+python-dotenv
+boto3
+setuptools
+aws-opentelemetry-distro-genai-beta==0.1.0

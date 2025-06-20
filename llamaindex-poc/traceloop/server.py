@@ -7,7 +7,7 @@ from traceloop.sdk import Traceloop
 import uvicorn
 
 # Initialize Traceloop
-Traceloop.init(app_name="llamaindex-fastapi-server")
+Traceloop.init()
 
 # Initialize FastAPI
 app = FastAPI(title="LlamaIndex Chat API")

@@ -1,0 +1,9 @@
+llama-index
+llama-index-llms-bedrock-converse
+openlit
+fastapi
+uvicorn[standard]
+python-dotenv
+boto3
+setuptools
+aws-opentelemetry-distro-genai-beta==0.1.0
