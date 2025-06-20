@@ -4,9 +4,8 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
-from langchain_ollama import ChatOllama
-from langchain.prompts import ChatPromptTemplate
-from langchain.chains import LLMChain
+import boto3
+import json
 from opentelemetry import trace
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import BatchSpanProcessor, ConsoleSpanExporter
@@ -38,25 +37,21 @@ load_dotenv()
 
 # Initialize FastAPI app
 app = FastAPI(
-    title="OpenLit LangChain Sample API",
-    description="A sample API using LangChain with Ollama and OpenLit instrumentation",
+    title="OpenLit Bedrock Converse API",
+    description="A sample API using AWS Bedrock Converse API with OpenLit instrumentation",
     version="1.0.0"
 )
 
-# Initialize the LLM with Ollama
-llm = ChatOllama(
-    model="llama3.2",
-    temperature=0.7,
-    base_url="http://localhost:11434"
+# Initialize Bedrock client
+bedrock_runtime = boto3.client(
+    'bedrock-runtime',
+    region_name='us-west-2'
 )
 
-# Create a prompt template
-prompt = ChatPromptTemplate.from_template(
-    "You are a helpful assistant. The user says: {input}. Provide a helpful response."
-)
-
-# Create a chain
-chain = LLMChain(llm=llm, prompt=prompt)
+# Model configuration
+MODEL_ID = 'anthropic.claude-3-haiku-20240307-v1:0'
+MAX_TOKENS = 300
+TEMPERATURE = 0.7
 
 # Request/Response models
 class ChatRequest(BaseModel):
@@ -84,8 +79,9 @@ SAMPLE_MESSAGES = [
 async def root():
     """Root endpoint providing API information"""
     return {
-        "service": "OpenLit LangChain Sample API",
+        "service": "OpenLit Bedrock Converse API",
         "version": "1.0.0",
+        "model": MODEL_ID,
         "endpoints": {
             "/": "This information",
             "/health": "Health check endpoint",
@@ -99,15 +95,43 @@ async def root():
 @app.get("/health")
 async def health_check():
     """Health check endpoint"""
-    return {"status": "healthy", "service": "openlit-langchain-api"}
+    return {"status": "healthy", "service": "openlit-bedrock-api"}
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
-    """Process a single chat message"""
+    """Process a single chat message using Bedrock Converse API"""
     try:
-        # Process the message through the chain
-        response = await chain.ainvoke({"input": request.message})
-        return ChatResponse(response=response["text"])
+        # Prepare messages for converse API
+        messages = [
+            {
+                "role": "user",
+                "content": [
+                    {
+                        "text": f"You are a helpful assistant. The user says: {request.message}. Provide a helpful response."
+                    }
+                ]
+            }
+        ]
+        
+        # Inference configuration
+        inference_config = {
+            "maxTokens": MAX_TOKENS,
+            "temperature": TEMPERATURE,
+            "topP": 1
+        }
+        
+        # Call Bedrock converse API
+        response = bedrock_runtime.converse(
+            modelId=MODEL_ID,
+            messages=messages,
+            inferenceConfig=inference_config
+        )
+        
+        # Extract response text
+        output_message = response['output']['message']
+        text_content = output_message['content'][0]['text']
+        
+        return ChatResponse(response=text_content)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing request: {str(e)}")
 
@@ -115,12 +139,36 @@ async def chat(request: ChatRequest):
 async def batch_chat(request: BatchChatRequest):
     """Process multiple messages in batch"""
     try:
-        # Process all messages concurrently
-        tasks = [chain.ainvoke({"input": message}) for message in request.messages]
-        results = await asyncio.gather(*tasks)
+        async def process_message(message: str) -> str:
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "text": f"You are a helpful assistant. The user says: {message}. Provide a helpful response."
+                        }
+                    ]
+                }
+            ]
+            
+            inference_config = {
+                "maxTokens": MAX_TOKENS,
+                "temperature": TEMPERATURE,
+                "topP": 1
+            }
+            
+            response = bedrock_runtime.converse(
+                modelId=MODEL_ID,
+                messages=messages,
+                inferenceConfig=inference_config
+            )
+            
+            return response['output']['message']['content'][0]['text']
         
-        # Extract responses
-        responses = [result["text"] for result in results]
+        # Process all messages concurrently
+        tasks = [process_message(message) for message in request.messages]
+        responses = await asyncio.gather(*tasks)
+        
         return BatchChatResponse(responses=responses)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Error processing batch request: {str(e)}")
@@ -129,8 +177,34 @@ async def batch_chat(request: BatchChatRequest):
 async def run_samples():
     """Run sample prompts to demonstrate the API"""
     try:
+        async def process_sample(message: str) -> str:
+            messages = [
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "text": f"You are a helpful assistant. The user says: {message}. Provide a helpful response."
+                        }
+                    ]
+                }
+            ]
+            
+            inference_config = {
+                "maxTokens": MAX_TOKENS,
+                "temperature": TEMPERATURE,
+                "topP": 1
+            }
+            
+            response = bedrock_runtime.converse(
+                modelId=MODEL_ID,
+                messages=messages,
+                inferenceConfig=inference_config
+            )
+            
+            return response['output']['message']['content'][0]['text']
+        
         # Process sample messages
-        tasks = [chain.ainvoke({"input": message}) for message in SAMPLE_MESSAGES]
+        tasks = [process_sample(message) for message in SAMPLE_MESSAGES]
         results = await asyncio.gather(*tasks)
         
         # Format the response
@@ -139,7 +213,7 @@ async def run_samples():
             samples.append({
                 "index": i + 1,
                 "prompt": message,
-                "response": result["text"]
+                "response": result
             })
         
         return {
@@ -152,10 +226,10 @@ async def run_samples():
 if __name__ == "__main__":
     import uvicorn
     
-    # Check if Ollama is accessible
-    print("Make sure Ollama is running locally.")
-    print("If not installed, visit: https://ollama.ai")
-    print("Then run: ollama pull llama3.2")
+    # Check AWS credentials
+    print("Make sure AWS credentials are configured.")
+    print("Using AWS Region: us-west-2")
+    print(f"Using Model: {MODEL_ID}")
     print("")
     print("Starting FastAPI server...")
     print("API documentation available at: http://localhost:8000/docs")
