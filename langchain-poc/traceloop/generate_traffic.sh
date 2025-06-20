@@ -3,7 +3,7 @@
 # Configuration
 SERVER_URL="${SERVER_URL:-http://localhost:8000}"
 ENDPOINT="${SERVER_URL}/chat"
-DELAY_SECONDS="${DELAY_SECONDS:-10}"  # Default 10 seconds between requests (6 requests/minute)
+DELAY_SECONDS="${DELAY_SECONDS:-60}"  # Default 60 seconds between requests (1 request/minute)
 NUM_REQUESTS="${NUM_REQUESTS:-0}"    # 0 means infinite
 TIMEOUT="${TIMEOUT:-30}"              # Request timeout in seconds
 
