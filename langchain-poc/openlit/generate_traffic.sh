@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Configuration
-SERVER_URL="http://localhost:8000"
-DELAY_SECONDS=2
+SERVER_URL="http://localhost:8003"
+DELAY_SECONDS=60
 NUM_REQUESTS=0  # 0 for infinite
 TIMEOUT=30
 

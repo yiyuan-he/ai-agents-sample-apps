@@ -16,11 +16,6 @@ import openlit
 # Set up OpenTelemetry with BOTH exporters
 tracer_provider = TracerProvider()
 
-# Add Console exporter
-console_exporter = ConsoleSpanExporter()
-console_processor = BatchSpanProcessor(console_exporter)
-tracer_provider.add_span_processor(console_processor)
-
 # Add OTLP exporter
 otlp_exporter = OTLPSpanExporter(endpoint="http://localhost:4318/v1/traces")
 otlp_processor = BatchSpanProcessor(otlp_exporter)
@@ -232,7 +227,7 @@ if __name__ == "__main__":
     print(f"Using Model: {MODEL_ID}")
     print("")
     print("Starting FastAPI server...")
-    print("API documentation available at: http://localhost:8000/docs")
+    print("API documentation available at: http://localhost:8003/docs")
     
     # Run the server
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8003)
