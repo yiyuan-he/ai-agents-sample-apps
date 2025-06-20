@@ -1,0 +1,8 @@
+llama-index
+llama-index-llms-ollama
+traceloop-sdk
+python-dotenv
+fastapi
+uvicorn
+aws-opentelemetry-distro-genai-beta==0.1.0b7
+boto3
