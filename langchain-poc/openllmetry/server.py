@@ -167,7 +167,7 @@ if __name__ == "__main__":
         exit(1)
     
     print("Starting OpenLLMetry LangChain FastAPI server with AWS Bedrock...")
-    print("API documentation available at: http://localhost:8000/docs")
+    print("API documentation available at: http://localhost:8002/docs")
     
     # Run the server
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8002)

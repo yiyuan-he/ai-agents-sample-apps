@@ -65,7 +65,7 @@ The server provides a RESTful API with automatic documentation:
 python server.py
 ```
 
-The server will start on `http://localhost:8000`
+The server will start on `http://localhost:8002`
 
 #### Available Endpoints
 
@@ -80,17 +80,17 @@ The server will start on `http://localhost:8000`
 
 ```bash
 # Single message
-curl -X POST http://localhost:8000/chat \
+curl -X POST http://localhost:8002/chat \
   -H "Content-Type: application/json" \
   -d '{"message": "What is artificial intelligence?"}'
 
 # Batch messages
-curl -X POST http://localhost:8000/batch \
+curl -X POST http://localhost:8002/batch \
   -H "Content-Type: application/json" \
   -d '{"messages": ["What is ML?", "What is NLP?", "What is computer vision?"]}'
 
 # Run samples
-curl http://localhost:8000/sample
+curl http://localhost:8002/sample
 ```
 
 ### Traffic Generation

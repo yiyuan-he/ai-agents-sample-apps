@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # Configuration
-SERVER_URL="http://localhost:8000"
-DELAY_SECONDS=10  # Increased to avoid AWS Bedrock throttling
+SERVER_URL="http://localhost:8002"
+DELAY_SECONDS=60  # 1 request per minute
 NUM_REQUESTS=0  # 0 for infinite
 TIMEOUT=30
 
