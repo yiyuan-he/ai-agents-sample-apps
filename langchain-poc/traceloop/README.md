@@ -1,42 +1,38 @@
-# Setup
+# Traceloop LangChain Sample Application
 
 ## Prerequisites
 
-Before you begin, ensure that Transaction Search is enabled on your AWS Account.
+- AWS credentials configured
+- Transaction Search enabled on your AWS Account: https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-Lambda-TransactionSearch.html
+- `TRACELOOP_API_KEY` environment variable (get from Traceloop dashboard)
 
-https://docs.aws.amazon.com/AmazonCloudWatch/latest/monitoring/Enable-Lambda-TransactionSearch.html
+## Setup
 
-## Environment Setup
+1. **Set up virtual environment:**
+   ```bash
+   uv venv
+   ```
 
-This application uses AWS Bedrock instead of OpenAI. Ensure you have AWS credentials configured via one of these methods:
-- Environment variables (`AWS_ACCESS_KEY_ID`, `AWS_SECRET_ACCESS_KEY`)
-- AWS CLI configuration (`~/.aws/credentials`)
-- IAM instance profile (if running on EC2)
+2. **Install dependencies:**
+   ```bash
+   uv pip install -r requirements.txt
+   ```
 
-Set your `TRACELOOP_API_KEY` in the your shell environment:
-```
-export TRACELOOP_API_KEY=<your_api_key>
-```
+3. **Set Traceloop API key:**
+   ```bash
+   export TRACELOOP_API_KEY=<your_api_key>
+   ```
 
-Create a python virtual env with all the necessary dependencies:
-```
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-```
-
-## Running the Application
-
-The application now runs as a FastAPI server. Run it with the ADOT Python SDK:
-```
-env OTEL_PYTHON_DISTRO=aws_distro \
-    OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-    OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
-    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-traceloop-app" \
-    AGENT_OBSERVABILITY_ENABLED="true" \
-    opentelemetry-instrument python server.py
-```
+4. **Run the application:**
+   ```bash
+   env OTEL_PYTHON_DISTRO=aws_distro \
+       OTEL_PYTHON_CONFIGURATOR=aws_configurator \
+       OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
+       OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
+       OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-traceloop-app" \
+       AGENT_OBSERVABILITY_ENABLED="true" \
+       opentelemetry-instrument python server.py
+   ```
 
 The server will start on `http://localhost:8000`
 
@@ -58,8 +54,8 @@ Other available endpoints:
 ## Viewing Spans in CloudWatch
 
 After the application is finished running, you can view the generated spans in CloudWatch by following these steps:
-    1. Open the AWS CloudWatch console
-    2. Navigate to the "Logs groups" section in the left sidebar.
-    3. Select the `aws/spans` log group to view your trace data.
+1. Open the AWS CloudWatch console
+2. Navigate to the "Logs groups" section in the left sidebar.
+3. Select the `aws/spans` log group to view your trace data.
 
-![Screenshot 2025-04-18 at 4 36 13 PM](https://github.com/user-attachments/assets/c78a484e-1d10-42c9-8fde-bd34513fe2e3)
+![Screenshot 2025-04-18 at 4 36 13 PM](https://github.com/user-attachments/assets/c78a484e-1d10-42c9-8fde-bd34513fe2e3)
