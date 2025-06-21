@@ -1,190 +1,126 @@
 #!/bin/bash
 
-# CrewAI OpenInference Traffic Generator
-# This script sends requests to the CrewAI server to generate trace data
-
 # Configuration
 SERVER_URL="${SERVER_URL:-http://localhost:8000}"
-DELAY_SECONDS="${DELAY_SECONDS:-60}"    # Default: 1 minute between requests
-MAX_REQUESTS="${MAX_REQUESTS:-0}"       # 0 = infinite loop
+ENDPOINT="${SERVER_URL}/chat"
+DELAY_SECONDS="${DELAY_SECONDS:-3600}"  # Default 1 hour (3600 seconds) between requests
+NUM_REQUESTS="${NUM_REQUESTS:-0}"    # 0 means infinite
+TIMEOUT="${TIMEOUT:-30}"              # Request timeout in seconds
 
 # Color codes for output
 GREEN='\033[0;32m'
-BLUE='\033[0;34m'
-YELLOW='\033[1;33m'
 RED='\033[0;31m'
+YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-# Sample queries
-QUERIES=(
-    "What are the benefits of using AI agents for task automation?"
-    "Explain the difference between supervised and unsupervised learning"
-    "How does quantum computing differ from classical computing?"
-    "What are the key principles of microservices architecture?"
-    "Describe the advantages of using containerization in software development"
-    "What is the role of observability in modern software systems?"
-    "Explain the concept of distributed tracing"
-    "How do AI agents collaborate in multi-agent systems?"
-    "What are the best practices for API design?"
-    "Describe the importance of continuous integration and deployment"
+# Array of sample messages
+MESSAGES=(
+    "What is the weather like today?"
+    "Tell me a joke"
+    "How do I make a cup of coffee?"
+    "What are the benefits of exercise?"
+    "Explain quantum computing in simple terms"
+    "What's the capital of France?"
+    "How do I learn programming?"
+    "What are some healthy breakfast ideas?"
+    "Tell me about artificial intelligence"
+    "How can I improve my productivity?"
+    "What's the difference between a list and a tuple in Python?"
+    "Explain the concept of microservices"
+    "What are some best practices for API design?"
+    "How does machine learning work?"
+    "What's the purpose of unit testing?"
 )
 
-# Function to print colored output
-print_status() {
-    echo -e "${BLUE}[$(date '+%Y-%m-%d %H:%M:%S')]${NC} $1"
-}
-
-print_success() {
-    echo -e "${GREEN}[SUCCESS]${NC} $1"
-}
-
-print_error() {
-    echo -e "${RED}[ERROR]${NC} $1"
-}
-
-print_warning() {
-    echo -e "${YELLOW}[WARNING]${NC} $1"
-}
-
-# Function to check if server is running
-check_server() {
-    print_status "Checking server health..."
-    if curl -s "${SERVER_URL}/health" > /dev/null; then
-        print_success "Server is healthy"
-        return 0
-    else
-        print_error "Server is not responding at ${SERVER_URL}"
-        return 1
-    fi
-}
-
-# Function to send a chat request
-send_chat_request() {
-    local query="$1"
-    print_status "Sending chat request: \"${query}\""
+# Function to send a request
+send_request() {
+    local message="$1"
+    local request_num="$2"
+    local timestamp=$(date '+%Y-%m-%d %H:%M:%S')
     
-    response=$(curl -s -X POST "${SERVER_URL}/chat" \
+    echo -e "${YELLOW}[$timestamp] Request #$request_num${NC}"
+    echo "Message: \"$message\""
+    
+    # Send request with timeout
+    response=$(curl -s -X POST "$ENDPOINT" \
         -H "Content-Type: application/json" \
-        -d "{\"message\": \"${query}\"}" \
-        -w "\n%{http_code}")
+        -d "{\"message\": \"$message\"}" \
+        -m "$TIMEOUT" \
+        -w "\nHTTP_STATUS:%{http_code}\nTIME_TOTAL:%{time_total}")
     
-    http_code=$(echo "$response" | tail -n 1)
-    body=$(echo "$response" | head -n -1)
+    # Extract HTTP status and response time
+    http_status=$(echo "$response" | grep "HTTP_STATUS:" | cut -d: -f2)
+    time_total=$(echo "$response" | grep "TIME_TOTAL:" | cut -d: -f2)
+    body=$(echo "$response" | sed '/HTTP_STATUS:/d' | sed '/TIME_TOTAL:/d')
     
-    if [ "$http_code" = "200" ]; then
-        print_success "Chat request completed successfully"
-        echo -e "${GREEN}Response preview:${NC} $(echo "$body" | jq -r '.response' | head -c 100)..."
+    if [ "$http_status" = "200" ]; then
+        echo -e "${GREEN}✓ Success${NC} (${time_total}s)"
+        echo "Response: $body"
     else
-        print_error "Chat request failed with HTTP code: $http_code"
-    fi
-}
-
-# Function to send a batch request
-send_batch_request() {
-    print_status "Sending batch request with 3 queries..."
-    
-    # Select 3 random queries
-    local batch_queries=()
-    for i in {1..3}; do
-        batch_queries+=("${QUERIES[$RANDOM % ${#QUERIES[@]}]}")
-    done
-    
-    # Create JSON array
-    local json_array=$(printf '%s\n' "${batch_queries[@]}" | jq -R . | jq -s .)
-    
-    response=$(curl -s -X POST "${SERVER_URL}/batch" \
-        -H "Content-Type: application/json" \
-        -d "{\"messages\": ${json_array}}" \
-        -w "\n%{http_code}")
-    
-    http_code=$(echo "$response" | tail -n 1)
-    
-    if [ "$http_code" = "200" ]; then
-        print_success "Batch request completed successfully"
-    else
-        print_error "Batch request failed with HTTP code: $http_code"
-    fi
-}
-
-# Function to send a sample request
-send_sample_request() {
-    print_status "Sending sample request..."
-    
-    response=$(curl -s "${SERVER_URL}/sample" -w "\n%{http_code}")
-    http_code=$(echo "$response" | tail -n 1)
-    
-    if [ "$http_code" = "200" ]; then
-        print_success "Sample request completed successfully"
-    else
-        print_error "Sample request failed with HTTP code: $http_code"
-    fi
-}
-
-# Main execution
-main() {
-    echo -e "${BLUE}=== CrewAI OpenInference Traffic Generator ===${NC}"
-    echo "Server URL: ${SERVER_URL}"
-    echo "Delay between requests: ${DELAY_SECONDS} seconds"
-    echo "Max requests: ${MAX_REQUESTS} (0 = infinite)"
-    echo ""
-    
-    # Check if jq is installed
-    if ! command -v jq &> /dev/null; then
-        print_warning "jq is not installed. Install it for better output formatting."
-    fi
-    
-    # Initial server check
-    if ! check_server; then
-        print_error "Please ensure the CrewAI server is running at ${SERVER_URL}"
-        exit 1
-    fi
-    
-    request_count=0
-    
-    # Main loop
-    while true; do
-        request_count=$((request_count + 1))
-        
-        echo ""
-        print_status "Starting request cycle #${request_count}"
-        
-        # Randomly select request type
-        request_type=$((RANDOM % 3))
-        
-        case $request_type in
-            0)
-                # Send chat request with random query
-                query="${QUERIES[$RANDOM % ${#QUERIES[@]}]}"
-                send_chat_request "$query"
-                ;;
-            1)
-                # Send batch request
-                send_batch_request
-                ;;
-            2)
-                # Send sample request
-                send_sample_request
-                ;;
-        esac
-        
-        # Check if we've reached max requests
-        if [ "$MAX_REQUESTS" -gt 0 ] && [ "$request_count" -ge "$MAX_REQUESTS" ]; then
-            print_status "Reached maximum number of requests (${MAX_REQUESTS})"
-            break
+        echo -e "${RED}✗ Error: HTTP $http_status${NC}"
+        if [ -n "$body" ]; then
+            echo "Response: $body"
         fi
-        
-        # Wait before next request
-        print_status "Waiting ${DELAY_SECONDS} seconds before next request..."
-        print_status "Press Ctrl+C to stop"
-        sleep "$DELAY_SECONDS"
-    done
-    
-    echo ""
-    print_status "Traffic generation completed. Total requests: ${request_count}"
+    fi
+    echo "---"
 }
 
 # Trap Ctrl+C to exit gracefully
-trap 'echo ""; print_warning "Interrupted by user"; exit 0' INT
+trap 'echo -e "\n${YELLOW}Traffic generation stopped by user${NC}"; exit 0' INT
 
-# Run main function
-main
+# Main execution
+echo -e "${GREEN}Starting traffic generation to $ENDPOINT${NC}"
+echo "Configuration:"
+echo "  - Delay between requests: ${DELAY_SECONDS}s"
+echo "  - Request timeout: ${TIMEOUT}s"
+echo "  - Number of requests: ${NUM_REQUESTS} (0 = infinite)"
+echo "  - Requests per minute: ~$((60 / DELAY_SECONDS))"
+echo -e "${YELLOW}Press Ctrl+C to stop${NC}"
+echo "=================================="
+
+# Check if server is reachable
+echo "Checking server health..."
+health_check=$(curl -s -o /dev/null -w "%{http_code}" "$SERVER_URL/health" -m 5)
+if [ "$health_check" != "200" ]; then
+    echo -e "${RED}Warning: Server health check failed (HTTP $health_check)${NC}"
+    echo "Make sure the server is running at $SERVER_URL"
+    read -p "Continue anyway? (y/n) " -n 1 -r
+    echo
+    if [[ ! $REPLY =~ ^[Yy]$ ]]; then
+        exit 1
+    fi
+fi
+
+count=0
+start_time=$(date +%s)
+
+while true; do
+    # Select a random message
+    random_index=$((RANDOM % ${#MESSAGES[@]}))
+    message="${MESSAGES[$random_index]}"
+    
+    # Increment counter
+    count=$((count + 1))
+    
+    # Send the request
+    send_request "$message" "$count"
+    
+    # Check if we've reached the limit
+    if [ "$NUM_REQUESTS" -gt 0 ] && [ "$count" -ge "$NUM_REQUESTS" ]; then
+        end_time=$(date +%s)
+        duration=$((end_time - start_time))
+        echo -e "${GREEN}Completed $count requests in ${duration}s${NC}"
+        break
+    fi
+    
+    # Show progress every 10 requests
+    if [ $((count % 10)) -eq 0 ]; then
+        current_time=$(date +%s)
+        elapsed=$((current_time - start_time))
+        rate=$(echo "scale=2; $count / $elapsed * 60" | bc 2>/dev/null || echo "N/A")
+        echo -e "${YELLOW}Progress: $count requests sent, Rate: ${rate} req/min${NC}"
+    fi
+    
+    # Wait before next request
+    sleep "$DELAY_SECONDS"
+done
