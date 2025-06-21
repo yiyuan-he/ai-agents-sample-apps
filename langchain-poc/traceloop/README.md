@@ -33,11 +33,8 @@ env OTEL_PYTHON_DISTRO=aws_distro \
     OTEL_PYTHON_CONFIGURATOR=aws_configurator \
     OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
     OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
-    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-app" \
-    OTEL_AWS_APPLICATION_SIGNALS_ENABLED="false" \
+    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-traceloop-app" \
     AGENT_OBSERVABILITY_ENABLED="true" \
-    STRANDS_OTEL_ENABLE_CONSOLE_EXPORT="true" \
-    OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED="true" \
     opentelemetry-instrument python server.py
 ```
 
