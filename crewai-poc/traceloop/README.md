@@ -48,38 +48,17 @@ export TRACELOOP_API_KEY=<your_api_key>
 
 ## Running the Application
 
-### Local Development with Console Output
+### Local Development
 
-For local development with console trace output:
 ```bash
 env OTEL_PYTHON_DISTRO=aws_distro \
     OTEL_PYTHON_CONFIGURATOR=aws_configurator \
     OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-    OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/crewai-traceloop,x-aws-log-stream=default,x-aws-metric-namespace=crewai-traceloop" \
+    OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
     OTEL_RESOURCE_ATTRIBUTES="service.name=crewai-traceloop-app" \
-    OTEL_AWS_APPLICATION_SIGNALS_ENABLED="false" \
     AGENT_OBSERVABILITY_ENABLED="true" \
-    STRANDS_OTEL_ENABLE_CONSOLE_EXPORT="true" \
-    OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED="true" \
     opentelemetry-instrument python server.py
 ```
-
-### Production Deployment to AWS
-
-For production deployment sending traces directly to AWS X-Ray:
-```bash
-env OTEL_METRICS_EXPORTER=none \
-    OTEL_LOGS_EXPORTER=none \
-    OTEL_PYTHON_DISTRO=aws_distro \
-    OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
-    OTEL_RESOURCE_ATTRIBUTES="service.name=crewai-traceloop-app" \
-    OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests" \
-    opentelemetry-instrument python server.py
-```
-
-**Note**: Replace `us-east-1` with your AWS region in the X-Ray endpoint URL.
 
 ## API Endpoints
 
