@@ -9,6 +9,6 @@ python-dotenv
 botocore
 boto3
 setuptools
-aws-opentelemetry-distro-genai-beta==0.1.0
+./aws_opentelemetry_distro_genai_beta-0.1.1-py3-none-any.whl
 fastapi
 uvicorn[standard] 
