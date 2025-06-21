@@ -9,6 +9,6 @@ traceloop-sdk
 botocore
 boto3
 setuptools
-aws-opentelemetry-distro-genai-beta==0.1.0
+aws-opentelemetry-distro-genai-beta==0.1.1
 fastapi
 uvicorn
