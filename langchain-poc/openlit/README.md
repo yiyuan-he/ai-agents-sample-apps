@@ -144,14 +144,12 @@ otlp_exporter = OTLPSpanExporter(endpoint="http://your-collector:4318/v1/traces"
 To send traces directly to AWS X-Ray:
 
 ```bash
-env OTEL_METRICS_EXPORTER=none \
-    OTEL_LOGS_EXPORTER=none \
-    OTEL_PYTHON_DISTRO=aws_distro \
+env OTEL_PYTHON_DISTRO=aws_distro \
     OTEL_PYTHON_CONFIGURATOR=aws_configurator \
     OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-    OTEL_EXPORTER_OTLP_TRACES_ENDPOINT=https://xray.us-east-1.amazonaws.com/v1/traces \
-    OTEL_RESOURCE_ATTRIBUTES="service.name=openlit-langchain-app" \
-    OTEL_PYTHON_DISABLED_INSTRUMENTATIONS="http,sqlalchemy,psycopg2,pymysql,sqlite3,aiopg,asyncpg,mysql_connector,botocore,boto3,urllib3,requests" \
+    OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
+    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-openlit-app" \
+    AGENT_OBSERVABILITY_ENABLED="true" \
     opentelemetry-instrument python server.py
 ```
 
