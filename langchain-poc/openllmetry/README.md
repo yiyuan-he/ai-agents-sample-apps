@@ -34,18 +34,16 @@ This sample application demonstrates how to use LangChain with OpenLLMetry instr
    ```
    The server will start on `http://localhost:8002`
 
-### Running with AWS X-Ray
-
-To send traces directly to AWS X-Ray:
-```bash
-env OTEL_PYTHON_DISTRO=aws_distro \
-    OTEL_PYTHON_CONFIGURATOR=aws_configurator \
-    OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
-    OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
-    OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-openllmetry-app" \
-    AGENT_OBSERVABILITY_ENABLED="true" \
-    opentelemetry-instrument python server.py
-```
+   To send telemetry to CloudWatch:
+   ```bash
+   env OTEL_PYTHON_DISTRO=aws_distro \
+       OTEL_PYTHON_CONFIGURATOR=aws_configurator \
+       OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf \
+       OTEL_EXPORTER_OTLP_LOGS_HEADERS="x-aws-log-group=test/genesis,x-aws-log-stream=default,x-aws-metric-namespace=genesis" \
+       OTEL_RESOURCE_ATTRIBUTES="service.name=langchain-openllmetry-app" \
+       AGENT_OBSERVABILITY_ENABLED="true" \
+       opentelemetry-instrument python server.py
+   ```
 
 ## API Endpoints
 

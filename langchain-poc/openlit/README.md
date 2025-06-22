@@ -27,9 +27,7 @@ This sample application demonstrates how to use AWS Bedrock Converse API with Op
 
 The server will start on `http://localhost:8000`
 
-### Running with AWS X-Ray
-
-To send traces directly to AWS X-Ray:
+To send telemetry to CloudWatch:
 ```bash
 env OTEL_PYTHON_DISTRO=aws_distro \
     OTEL_PYTHON_CONFIGURATOR=aws_configurator \
