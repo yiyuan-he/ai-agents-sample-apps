@@ -41,7 +41,7 @@ chat_engine = SimpleChatEngine.from_defaults(
 
 # Request/Response models
 class ChatRequest(BaseModel):
-    prompt: str
+    message: str
 
 class ChatResponse(BaseModel):
     response: str
@@ -54,7 +54,7 @@ async def root():
 async def chat(request: ChatRequest) -> ChatResponse:
     try:
         # Chat with the engine
-        response = chat_engine.chat(request.prompt)
+        response = chat_engine.chat(request.message)
         return ChatResponse(response=str(response))
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
