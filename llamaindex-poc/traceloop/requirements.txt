@@ -4,5 +4,5 @@ traceloop-sdk
 python-dotenv
 fastapi
 uvicorn
-aws-opentelemetry-distro-genai-beta==0.1.0b7
+./aws_opentelemetry_distro_genai_beta-0.1.1-py3-none-any.whl
 boto3
